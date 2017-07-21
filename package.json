@@ -1,0 +1,19 @@
+{
+  "name": "weapp-pay",
+  "version": "1.0.0",
+  "description": "weapp pay function with async/await",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "weapp",
+    "pay"
+  ],
+  "author": "wjchang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/447491480/little-man-config/issues"
+  },
+  "homepage": "https://github.com/447491480/little-man-config#readme"
+}
