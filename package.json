@@ -1,7 +1,7 @@
 {
   "name": "weapp-tools",
   "version": "1.0.0",
-  "description": "weapp pay function with async/await",
+  "description": "tools for weapp, function with async/await",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,7 +12,7 @@
   },
   "keywords": [
     "weapp",
-    "pay"
+    "tools"
   ],
   "author": "wjchang",
   "license": "ISC",
