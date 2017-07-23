@@ -2,77 +2,48 @@
  * Created by chang on 2017/7/22.
  */
 
-const crypto = require('crypto');
+const pay = require('./lib/pay');
+const config = require('./lib/config');
+const request = require('request-promise-any');
+const xmltojs = require('xml2js');
 
-function paysignjs(appid, nonceStr, pkg, signType, timeStamp) {
-    let ret = {
-        appId: appid,
-        nonceStr: nonceStr,
-        package: pkg,
-        signType: signType,
-        timeStamp: timeStamp
-    };
-
-    let string = raw1(ret);
-    string = string + '&key='+key;
-    console.log(string);
-
-    return crypto.createHash('md5').update(string, 'utf8').digest('hex');
+async function getSession(app_id, app_secret, code, grant_type = 'authorization_code') {
+    return await request.post(config.WX_GET_SESSION_KEY).form({
+        appid: app_id,
+        secret: app_secret,
+        js_code: code,
+        grant_type: grant_type
+    })
 }
 
-function raw1(args) {
-    let keys = Object.keys(args);
-    keys = keys.sort();
-    let newArgs = {};
-    keys.forEach(function(key) {
-        newArgs[key] = args[key];
+async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, device_ip, notify_url='', attach = '', trade_type = 'JSAPI') {
+    let nonce_str = Math.random();
+
+    let formData = "<xml>";
+    formData += "<appid>" + app_id + "</appid>";
+    formData += "<attach>" + attach + "</attach>";
+    formData += "<body>" + body + "</body>";
+    formData += "<mch_id>" + mch_id + "</mch_id>";
+    formData += "<nonce_str>" + nonce_str + "</nonce_str>";
+    formData += "<notify_url>" + notify_url + "</notify_url>";
+    formData += "<openid>" + openid + "</openid>";
+    formData += "<out_trade_no>" + tid + "</out_trade_no>";
+    formData += "<spbill_create_ip>" + device_ip + "</spbill_create_ip>";
+    formData += "<total_fee>" + total_fee + "</total_fee>";
+    formData += "<trade_type>" + trade_type + "</trade_type>";
+    formData += "<sign>" + pay.paysignjsapi(app_id, attach, body, mch_id, nonce_str, notify_url, openid, tid, device_ip, total_fee, trade_type) + "</sign>";
+    formData += "</xml>";
+
+    let prepayRes =  await request({
+        url: config.WX_GET_UNIFIED_ORDER,
+        method: 'POST',
+        body: formData
     });
 
-    let string = '';
-    for(let k in newArgs) {
-        string += '&' + k + '=' + newArgs[k];
-    }
-    string = string.substr(1);
-    return string;
+    return await xmltojs.parseString(prepayRes);
 }
 
-function paysignjsapi(appid, attach, body, mch_id, nonce_str, notify_url, openid, out_trade_no, spbill_create_ip, total_fee, trade_type) {
-    let ret = {
-        appid: appid,
-        attach: attach,
-        body: body,
-        mch_id: mch_id,
-        nonce_str: nonce_str,
-        notify_url: notify_url,
-        openid: openid,
-        out_trade_no: out_trade_no,
-        spbill_create_ip: spbill_create_ip,
-        total_fee: total_fee,
-        trade_type: trade_type
-    };
-    let string = raw(ret);
-    string = string + '&key='+key;
-    return crypto.createHash('md5').update(string, 'utf8').digest('hex');
-}
 
-function raw(args) {
-    let keys = Object.keys(args);
-    keys = keys.sort();
-    let newArgs = {};
-    keys.forEach(function(key) {
-        newArgs[key.toLowerCase()] = args[key];
-    });
+exports.getSession = getSession;
 
-    let string = '';
-    for(let k in newArgs) {
-        string += '&' + k + '=' + newArgs[k];
-    }
-    string = string.substr(1);
-    return string;
-}
 
-function getXMLNodeValue(node_name, xml) {
-    let tmp = xml.split("<" + node_name + ">");
-    let _tmp = tmp[1].split("</" + node_name + ">");
-    return _tmp[0];
-}
