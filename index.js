@@ -8,12 +8,14 @@ const request = require('request-promise-any');
 const xmltojs = require('xml2js');
 
 async function getSession(app_id, app_secret, code, grant_type = 'authorization_code') {
-    return await request.post(config.WX_GET_SESSION_KEY).form({
+    let sessionRet = await request.post(config.WX_GET_SESSION_KEY).form({
         appid: app_id,
         secret: app_secret,
         js_code: code,
         grant_type: grant_type
-    })
+    });
+
+    return JSON.parse(sessionRet);
 }
 
 async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, device_ip, notify_url='', attach = '', trade_type = 'JSAPI') {
@@ -45,5 +47,6 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, device_ip,
 
 
 exports.getSession = getSession;
+exports.doPrepay = doPrepay;
 
 
