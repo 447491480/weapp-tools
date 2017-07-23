@@ -6,6 +6,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/447491480/weapp-tools.git"
+  },
   "keywords": [
     "weapp",
     "pay"
@@ -13,7 +17,7 @@
   "author": "wjchang",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/447491480/little-man-config/issues"
+    "url": "https://github.com/447491480/weapp-tools/issues"
   },
-  "homepage": "https://github.com/447491480/little-man-config#readme"
+  "homepage": "https://github.com/447491480/weapp-tools#readme"
 }
