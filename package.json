@@ -1,5 +1,5 @@
 {
-  "name": "weapp-pay",
+  "name": "weapp-tools",
   "version": "1.0.0",
   "description": "weapp pay function with async/await",
   "main": "index.js",
