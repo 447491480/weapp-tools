@@ -1,5 +1,5 @@
 {
-  "name": "weapp-tools",
+  "name": "wxapp-tools",
   "version": "1.0.0",
   "description": "tools for weapp, function with async/await",
   "main": "index.js",
