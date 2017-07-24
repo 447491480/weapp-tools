@@ -20,7 +20,7 @@ async function getSession(app_id, app_secret, code, grant_type = 'authorization_
     return JSON.parse(sessionRet);
 }
 
-async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, notify_url='',device_ip='', attach = '', trade_type = 'JSAPI') {
+async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, attach = '',notify_url='',device_ip='', trade_type = 'JSAPI') {
     let nonce_str = Math.random().toString().substr(0,10);
 
     let formData = "<xml>";
@@ -38,15 +38,19 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, notify_url
     formData += "<sign>" + pay.paysignjsapi(app_id, attach, body, mch_id, nonce_str, notify_url, openid, tid, device_ip, total_fee, trade_type) + "</sign>";
     formData += "</xml>";
 
-    console.log(formData);
-
     let prepayRes =  await request({
         url: config.WX_GET_UNIFIED_ORDER,
         method: 'POST',
         body: formData
     });
 
-    return await utils.parseXml(prepayRes);
+    let pResObj = await utils.parseXml(prepayRes)
+
+    if(pResObj.xml.return_code[0]=='FAIL') {
+        throw pResObj.xml.return_msg[0]
+    }
+
+    return pResObj;
 }
 
 exports.getSession = getSession;
