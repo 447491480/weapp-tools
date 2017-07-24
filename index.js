@@ -45,7 +45,6 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, device_ip,
     return await xmltojs.parseString(prepayRes);
 }
 
-
 exports.getSession = getSession;
 exports.doPrepay = doPrepay;
 
