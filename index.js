@@ -4,8 +4,10 @@
 
 const pay = require('./lib/pay');
 const config = require('./lib/config');
+const utils = require('./lib/utils');
+
 const request = require('request-promise-any');
-const xmltojs = require('xml2js');
+
 
 async function getSession(app_id, app_secret, code, grant_type = 'authorization_code') {
     let sessionRet = await request.post(config.WX_GET_SESSION_KEY).form({
@@ -18,8 +20,8 @@ async function getSession(app_id, app_secret, code, grant_type = 'authorization_
     return JSON.parse(sessionRet);
 }
 
-async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, device_ip, notify_url='', attach = '', trade_type = 'JSAPI') {
-    let nonce_str = Math.random();
+async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, notify_url='',device_ip='', attach = '', trade_type = 'JSAPI') {
+    let nonce_str = Math.random().toString().substr(0,10);
 
     let formData = "<xml>";
     formData += "<appid>" + app_id + "</appid>";
@@ -36,13 +38,15 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, device_ip,
     formData += "<sign>" + pay.paysignjsapi(app_id, attach, body, mch_id, nonce_str, notify_url, openid, tid, device_ip, total_fee, trade_type) + "</sign>";
     formData += "</xml>";
 
+    console.log(formData);
+
     let prepayRes =  await request({
         url: config.WX_GET_UNIFIED_ORDER,
         method: 'POST',
         body: formData
     });
 
-    return await xmltojs.parseString(prepayRes);
+    return await utils.parseXml(prepayRes);
 }
 
 exports.getSession = getSession;
