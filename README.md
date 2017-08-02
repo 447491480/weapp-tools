@@ -2,6 +2,16 @@
 ### 使用了async / await特性，使用请升级node.js to 8.0以上。
 
 
+### 配置文件格式(wxapp.json)
+```json
+{
+    "app_id":"",
+    "app_secret":"",
+    "mch_id":"",
+    "api_key":""
+}
+```
+
 ### 获取openid  —— wxappTools.getSession()
 小程序端wx.login()获取code,
 ```javascript
@@ -70,7 +80,7 @@ module.exports = {
         if (!trade) throw '订单创建失败';
 
 
-        return await wxappTools.doPrepay(trade.flow_no, prepay_args.total_fee, prepay_args.body, trade.wx_id, config.app_id, config.mch_id,trade.id)
+        return await wxappTools.doPrepay(trade.flow_no, prepay_args.total_fee, prepay_args.body, trade.wx_id, config.app_id, config.mch_id,config.api_key,trade.id)
     }
 };
 ```
