@@ -38,8 +38,6 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, a
     formData += "<sign>" + pay.paysignjsapi(app_id, attach, body, mch_id, nonce_str, notify_url, openid, tid, device_ip, total_fee, trade_type, api_key) + "</sign>";
     formData += "</xml>";
 
-    console.log(formData);
-
     let prepayRes = await request({
         url: config.WX_GET_UNIFIED_ORDER,
         method: 'POST',
