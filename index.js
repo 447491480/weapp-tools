@@ -52,11 +52,11 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, a
         throw pResObj.xml.return_msg[0]
     } else if (pResObj.xml.return_code[0] === 'SUCCESS') {
         let args = {};
-        args.package = 'prepay_id='+pResObj.xml.prepay_id[0];
-        args.timeStamp = Math.floor((new Date()).getTime()/1000).toString();
+        args.package = 'prepay_id=' + pResObj.xml.prepay_id[0];
+        args.timeStamp = Math.floor((new Date()).getTime() / 1000).toString();
         args.nonceStr = Math.random().toString().substr(0, 10);
         args.signType = 'MD5';
-        args.paySign = pay.paysignjs(app_id,args.nonceStr,args.package,args.timeStamp,api_key)
+        args.paySign = pay.paysignjs(app_id, args.nonceStr, args.package, args.signType, args.timeStamp, api_key)
 
         return args;
     } else {
