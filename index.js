@@ -21,6 +21,7 @@ async function getSession(app_id, app_secret, code, grant_type = 'authorization_
 
 async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, attach = 'test', notify_url = '/notify', device_ip = '0.0.0.0', trade_type = 'JSAPI') {
     let nonce_str = Math.random().toString().substr(0, 10);
+    total_fee = Math.floor(total_fee * 100);
 
     let formData = "<xml>";
     formData += "<appid>" + app_id + "</appid>";
@@ -37,6 +38,8 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, a
     formData += "<sign>" + pay.paysignjsapi(app_id, attach, body, mch_id, nonce_str, notify_url, openid, tid, device_ip, total_fee, trade_type, api_key) + "</sign>";
     formData += "</xml>";
 
+    console.log(formData);
+
     let prepayRes = await request({
         url: config.WX_GET_UNIFIED_ORDER,
         method: 'POST',
@@ -47,9 +50,18 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, a
 
     if (pResObj.xml.return_code[0] === 'FAIL') {
         throw pResObj.xml.return_msg[0]
-    }
+    } else if (pResObj.xml.return_code[0] === 'SUCCESS') {
+        let args = {};
+        args.package = 'prepay_id='+pResObj.xml.prepay_id[0];
+        args.timeStamp = Math.floor((new Date()).getTime()/1000).toString();
+        args.nonceStr = Math.random().toString().substr(0, 10);
+        args.signType = 'MD5';
+        args.paySign = pay.paysignjs(app_id,args.nonceStr,args.package,args.timeStamp,api_key)
 
-    return pResObj;
+        return args;
+    } else {
+        throw '支付服务异常'
+    }
 }
 
 exports.getSession = getSession;
