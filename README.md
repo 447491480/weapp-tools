@@ -1,5 +1,6 @@
 ### weapp-tools 微信小程序工具集
-### 使用了async / await特性，使用请升级node.js to 8.0以上。
+### 重要信息全部在服务端，安全等级高
+### 使用了async / await特性，使用请升级node.js to 7.6.0以上。
 
 
 ### 配置文件格式(wxapp.json)
@@ -48,6 +49,9 @@ module.exports = {
 
 ### 微信支付 —— wxappTools.doPrepay()
 小程序将用户选择的商品信息传到服务端，服务端生成订单，再到微信支付平台生成预支付订单
+生成预付单后，将参数和签名打包返回给微信小程序，小程序直接使用参数完成支付。
+
+
 ```javascript
 const wxappTools = require('wxapp-tools');
 const config = require('little-man-config').get('wxapp');

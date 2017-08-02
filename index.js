@@ -19,7 +19,7 @@ async function getSession(app_id, app_secret, code, grant_type = 'authorization_
     return JSON.parse(sessionRet);
 }
 
-async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, attach = '', notify_url = '', device_ip = '', trade_type = 'JSAPI') {
+async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, attach = 'test', notify_url = '/notify', device_ip = '0.0.0.0', trade_type = 'JSAPI') {
     let nonce_str = Math.random().toString().substr(0, 10);
 
     let formData = "<xml>";
