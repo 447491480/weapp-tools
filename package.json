@@ -21,7 +21,6 @@
   },
   "homepage": "https://github.com/447491480/weapp-tools#readme",
   "dependencies": {
-    "crypto": "0.0.3",
     "request": "^2.81.0",
     "request-promise-any": "^1.0.4",
     "xml2js": "^0.4.17"
