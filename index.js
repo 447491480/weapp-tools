@@ -30,7 +30,11 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, a
     formData += "<mch_id>" + mch_id + "</mch_id>";
     formData += "<nonce_str>" + nonce_str + "</nonce_str>";
     formData += "<notify_url>" + notify_url + "</notify_url>";
-    formData += "<openid>" + openid + "</openid>";
+
+    if(trade_type === 'JSAPI') {
+        formData += "<openid>" + openid + "</openid>";
+    }
+
     formData += "<out_trade_no>" + tid + "</out_trade_no>";
     formData += "<spbill_create_ip>" + device_ip + "</spbill_create_ip>";
     formData += "<total_fee>" + total_fee + "</total_fee>";
@@ -79,7 +83,7 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, a
 
         return retData;
     } else {
-        throw '支付服务异常'
+        throw Error('支付服务异常')
     }
 }
 
