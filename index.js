@@ -50,13 +50,35 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, a
         throw pResObj.xml.return_msg[0]
     } else if (pResObj.xml.return_code[0] === 'SUCCESS') {
         let args = {};
+        let retData = {};
         args.package = 'prepay_id=' + pResObj.xml.prepay_id[0];
         args.timeStamp = Math.floor((new Date()).getTime() / 1000).toString();
         args.nonceStr = Math.random().toString().substr(0, 10);
         args.signType = 'MD5';
-        args.paySign = pay.paysignjs(app_id, args.nonceStr, args.package, args.signType, args.timeStamp, api_key)
+        args.prepayid = pResObj.xml.prepay_id[0];
+        args.appPackage='Sign=WXPay';
 
-        return args;
+        if(trade_type==='JSAPI') {
+            args.paySign = pay.paysignjs(app_id, args.nonceStr, args.package, args.signType, args.timeStamp, api_key);
+
+            retData.package = args.package;
+            retData.timeStamp = args.timeStamp;
+            retData.nonceStr = args.nonceStr;
+            retData.signType = args.signType;
+            retData.paySign = args.paySign;
+        } else if(trade_type === 'APP') {
+            args.sign = pay.paysignapp(app_id,mch_id,args.prepayid,args.appPackage,args.nonceStr,args.timeStamp,api_key);
+
+            retData.appid=app_id;
+            retData.partnerid = mch_id;
+            retData.prepayid = args.prepayid;
+            retData.package = args.appPackage;
+            retData.noncestr = args.nonceStr;
+            retData.timestamp = args.timeStamp;
+            retData.sign = args.sign;
+        }
+
+        return retData;
     } else {
         throw '支付服务异常'
     }
