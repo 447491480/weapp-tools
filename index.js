@@ -26,7 +26,7 @@ async function getUserInfo(app_id, app_secret, code, grant_type = 'authorization
         throw Error(accessTokenRsp.errmsg)
     }
 
-    let getUserInfoRsp = await request.get(config.WX_GET_USER_INFO+'?access_token'+accessTokenRsp['access_token']+'&open_id='+accessTokenRsp['openid']);
+    let getUserInfoRsp = await request.get(config.WX_GET_USER_INFO+'?access_token'+accessTokenRsp['access_token']+'&openid='+accessTokenRsp['openid']);
     getUserInfoRsp = JSON.parse(getUserInfoRsp);
     if(getUserInfoRsp.errcode) {
         throw Error(getUserInfoRsp.errmsg);
