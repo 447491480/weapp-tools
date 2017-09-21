@@ -20,9 +20,19 @@ async function getSession(app_id, app_secret, code, grant_type = 'authorization_
 }
 
 async function getUserInfo(app_id, app_secret, code, grant_type = 'authorization_code') {
-    let sessionRet = await request.get(config.WX_GET_ACCESS_TOKEN+'?appid='+app_id+'&secret='+app_secret+'&code='+code+'&grant_type='+grant_type);
+    let accessTokenRsp = await request.get(config.WX_GET_ACCESS_TOKEN+'?appid='+app_id+'&secret='+app_secret+'&code='+code+'&grant_type='+grant_type);
+    accessTokenRsp = JSON.parse(accessTokenRsp);
+    if(accessTokenRsp.errorcode) {
+        throw Error(accessTokenRsp.errmsg)
+    }
 
-    return JSON.parse(sessionRet);
+    let getUserInfoRsp = await request.get(config.WX_GET_USER_INFO+'?access_token'+accessTokenRsp['access_token']+'&open_id='+accessTokenRsp['openid']);
+    getUserInfoRsp = JSON.parse(getUserInfoRsp);
+    if(getUserInfoRsp.errorcode) {
+        throw Error(getUserInfoRsp.errmsg);
+    }
+
+    return {wx_id:getUserInfoRsp['openid'],wx_account:getUserInfoRsp['nickname'],wx_img_url:getUserInfoRsp['headimgurl']};
 }
 
 
