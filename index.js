@@ -107,6 +107,6 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, a
 
 exports.getSession = getSession;
 exports.doPrepay = doPrepay;
-exports.getUserInfo = getUserInfo();
+exports.getUserInfo = getUserInfo;
 
 
