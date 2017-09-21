@@ -22,13 +22,13 @@ async function getSession(app_id, app_secret, code, grant_type = 'authorization_
 async function getUserInfo(app_id, app_secret, code, grant_type = 'authorization_code') {
     let accessTokenRsp = await request.get(config.WX_GET_ACCESS_TOKEN+'?appid='+app_id+'&secret='+app_secret+'&code='+code+'&grant_type='+grant_type);
     accessTokenRsp = JSON.parse(accessTokenRsp);
-    if(accessTokenRsp.errorcode) {
+    if(accessTokenRsp.errcode) {
         throw Error(accessTokenRsp.errmsg)
     }
 
     let getUserInfoRsp = await request.get(config.WX_GET_USER_INFO+'?access_token'+accessTokenRsp['access_token']+'&open_id='+accessTokenRsp['openid']);
     getUserInfoRsp = JSON.parse(getUserInfoRsp);
-    if(getUserInfoRsp.errorcode) {
+    if(getUserInfoRsp.errcode) {
         throw Error(getUserInfoRsp.errmsg);
     }
 
