@@ -19,6 +19,14 @@ async function getSession(app_id, app_secret, code, grant_type = 'authorization_
     return JSON.parse(sessionRet);
 }
 
+async function getUserInfo(app_id, app_secret, code, grant_type = 'authorization_code') {
+    let sessionRet = await request.get(config.WX_GET_ACCESS_TOKEN+'?appid='+app_id+'&secret='+app_secret+'&code='+code+'&grant_type='+grant_type);
+
+    return JSON.parse(sessionRet);
+}
+
+
+
 async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, attach = 'test', notify_url = '/notify', device_ip = '0.0.0.0', trade_type = 'JSAPI') {
     let nonce_str = Math.random().toString().substr(0, 10);
     total_fee = Math.floor(total_fee * 100);
@@ -89,5 +97,6 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, a
 
 exports.getSession = getSession;
 exports.doPrepay = doPrepay;
+exports.getUserInfo = getUserInfo();
 
 
