@@ -39,7 +39,7 @@ async function getUserInfo(app_id, app_secret, code, grant_type = 'authorization
 
 async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, attach = 'test', notify_url = '/notify', device_ip = '0.0.0.0', trade_type = 'JSAPI') {
     let nonce_str = Math.random().toString().substr(0, 10);
-    total_fee = Math.floor(total_fee * 100);
+    total_fee = Math.floor(total_fee * 10000/100);
 
     let formData = "<xml>";
     formData += "<appid>" + app_id + "</appid>";
