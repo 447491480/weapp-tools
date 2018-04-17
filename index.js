@@ -97,6 +97,10 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, a
             retData.noncestr = args.nonceStr;
             retData.timestamp = args.timeStamp;
             retData.sign = args.sign;
+
+            if(trade_type === 'NATIVE') {
+                retData.code_url = pResObj.xml.code_url[0];
+            }
         }
 
         return retData;
