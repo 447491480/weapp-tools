@@ -88,7 +88,7 @@ async function doPrepay(tid, total_fee, body, openid, app_id, mch_id, api_key, a
             retData.nonceStr = args.nonceStr;
             retData.signType = args.signType;
             retData.paySign = args.paySign;
-        } else if(trade_type === 'APP') {
+        } else if(trade_type === 'APP' || trade_type === 'NATIVE') {
             args.sign = pay.paysignapp(app_id,mch_id,args.prepayid,args.appPackage,args.nonceStr,args.timeStamp,api_key);
 
             retData.partnerid = mch_id;

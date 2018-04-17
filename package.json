@@ -1,6 +1,6 @@
 {
   "name": "wxapp-tools",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "tools for weapp, function with async/await",
   "main": "index.js",
   "scripts": {
